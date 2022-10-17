@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import SearchBar from './components/SearchBar'
+import SearchBar from './components/SearchBar/SearchBar'
 
 const AppContainer = styled.div`
   width:100%;

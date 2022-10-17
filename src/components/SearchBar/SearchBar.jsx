@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useClickOutside } from "react-click-outside-hook";
 import { MoonLoader } from "react-spinners";
 import axios from "axios";
+import { TvShow } from "../TvShow/TvShow";
 
 const SearchBarContainer = styled(motion.div)`
   display: flex;
@@ -77,11 +78,13 @@ const LineSeperator = styled.span`
 `;
 
 const SearchContent = styled.div`
+  box-sizing:border-box;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  
+  overflow-y:auto;
+  overflow-x:none;
 `;
 
 const LoadingWrapper = styled.div`
@@ -111,6 +114,7 @@ function SearchBar(props) {
   const [isExpanded, setExpanded] = useState(false);
   const [searchQuery,setSearchQuery] = useState("")
   const [isLoading,setIsLoading] = useState(false)
+  const [tvShows,setTvShows] = useState([])
   const [parentRef, isClickedOutside] = useClickOutside();
   
 
@@ -132,7 +136,8 @@ function SearchBar(props) {
 
         const response = await axios.get(URL).catch(err=>console.log(err))
 
-        console.log(response)
+        setTvShows(response.data)
+        console.log(response.data);
         setIsLoading(false)
 
     },500)
@@ -147,6 +152,7 @@ function SearchBar(props) {
     setExpanded(false);
     setSearchQuery("")
     setIsLoading(false)
+    setTvShows([])
   }
   console.log('render')
   function changeHandler(e){
@@ -204,12 +210,21 @@ function SearchBar(props) {
           )}
         </AnimatePresence>
       </SearchInputContainer>
-      <LineSeperator />
-      <SearchContent>
+      {isExpanded && <LineSeperator />}
+      {isExpanded && <SearchContent>
         {isLoading && <LoadingWrapper>
             <MoonLoader loading color="#000" size={20}/>
         </LoadingWrapper>}
-      </SearchContent>
+        {!isLoading && tvShows.length!==0 && <>
+          {tvShows.map(({show})=>{
+            return <TvShow 
+            thumbnailSrc={show?.image}
+            name = {show.name}
+            rating={show?.rating?.average}
+            />
+          })}
+        </>}
+      </SearchContent>}
     </SearchBarContainer>
   );
 }
