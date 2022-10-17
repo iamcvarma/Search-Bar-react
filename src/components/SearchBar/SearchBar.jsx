@@ -76,6 +76,14 @@ const LineSeperator = styled.span`
   height: 2px;
   background-color: #d8d8d878;
 `;
+const NoResults = styled.div`
+  width:100%;
+  height:4em;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#C8C8C8;
+`
 
 const SearchContent = styled.div`
   box-sizing:border-box;
@@ -97,7 +105,7 @@ const LoadingWrapper = styled.div`
 
 const containerVarient = {
   expanded: {
-    height: "20em",
+    height: "30em",
   },
   collapsed: {
     height: "3.8em",
@@ -215,6 +223,12 @@ function SearchBar(props) {
         {isLoading && <LoadingWrapper>
             <MoonLoader loading color="#000" size={20}/>
         </LoadingWrapper>}
+          {!isLoading && tvShows.length==0 &&
+          <NoResults>
+            No Movie / TV Show Found!
+          </NoResults>
+          }
+
         {!isLoading && tvShows.length!==0 && <>
           {tvShows.map(({show})=>{
             return <TvShow 
